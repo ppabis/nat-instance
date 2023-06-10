@@ -5,7 +5,7 @@ resource "aws_instance" "private-instance" {
   instance_type = "t4g.nano"
   availability_zone = "eu-central-1b"
   iam_instance_profile = aws_iam_instance_profile.ssm-profile.name
-  vpc_security_group_ids = [aws_security_group.nat-sg.id]
+  vpc_security_group_ids = [aws_security_group.private.id]
 }
 
 resource "aws_security_group" "private" {
