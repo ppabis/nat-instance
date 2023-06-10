@@ -23,6 +23,13 @@ resource "aws_security_group" "nat-sg" {
   }
 
   ingress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    security_groups = [ aws_security_group.private.id  ]
+  }
+
+  ingress {
     from_port = 22
     to_port = 22
     protocol = "tcp"
@@ -40,6 +47,8 @@ resource "aws_network_interface" "private-sub-ni" {
     device_index = 1
     instance = aws_instance.nat-instance.id
   }
+  security_groups = [aws_security_group.nat-sg.id]
+  source_dest_check = false
 }
 
 output "private-ip" {
