@@ -33,3 +33,15 @@ resource "aws_security_group" "nat-sg" {
 output "ip" {
   value = aws_instance.nat-instance.public_ip
 }
+
+resource "aws_network_interface" "private-sub-ni" {
+  subnet_id = aws_subnet.private-subnet.id
+  attachment {
+    device_index = 1
+    instance = aws_instance.nat-instance.id
+  }
+}
+
+output "private-ip" {
+  value = aws_network_interface.private-sub-ni.private_ip
+}
