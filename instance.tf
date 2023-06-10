@@ -6,6 +6,14 @@ resource "aws_instance" "nat-instance" {
   availability_zone = "eu-central-1b"
   vpc_security_group_ids = [aws_security_group.nat-sg.id]
   key_name = aws_key_pair.nat-kp.key_name
+
+  user_data = <<-EOF
+  #!/bin/bash
+  sysctl -w net.ipv4.ip_forward=1
+  iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+  iptables -A FORWARD -i eth0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+  iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
+  EOF
 }
 
 resource "aws_key_pair" "nat-kp" {
