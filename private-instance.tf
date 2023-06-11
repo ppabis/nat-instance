@@ -1,5 +1,6 @@
 resource "aws_instance" "private-instance" {
   count = 2
+  tags = { Name = "Private-Instance-${count.index}" }
   ami = data.aws_ami.amazon-linux-2023.id
   subnet_id = aws_subnet.private-subnet.id
   instance_type = "t4g.nano"
