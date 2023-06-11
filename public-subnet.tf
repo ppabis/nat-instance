@@ -3,9 +3,7 @@ resource "aws_subnet" "public-subnet" {
     cidr_block = "10.8.1.0/24"
     vpc_id = aws_vpc.nat-test.id
     map_public_ip_on_launch = true
-    tags = {
-        Name = "public-subnet"
-    }
+    tags = { Name = "public-subnet" }
 }
 
 resource "aws_route_table" "public-rtb" {

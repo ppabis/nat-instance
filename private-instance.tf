@@ -4,7 +4,7 @@ resource "aws_instance" "private-instance" {
   subnet_id = aws_subnet.private-subnet.id
   instance_type = "t4g.nano"
   availability_zone = "eu-central-1b"
-  iam_instance_profile = aws_iam_instance_profile.ssm-profile.name
+  iam_instance_profile = aws_iam_instance_profile.ssm-profile.name # Allow connecting from Systems Manager
   vpc_security_group_ids = [aws_security_group.private.id]
 }
 
