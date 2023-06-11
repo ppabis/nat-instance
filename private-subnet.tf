@@ -17,6 +17,5 @@ resource "aws_route_table_association" "private-rtb" {
 resource "aws_route" "private-public" {
     route_table_id = aws_route_table.private-rtb.id
     destination_cidr_block = "0.0.0.0/0"
-    network_interface_id = aws_network_interface.private-sub-ni.id
-  
+    network_interface_id = aws_network_interface.private-sub-ni.id  
 }
