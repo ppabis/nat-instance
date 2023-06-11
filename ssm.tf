@@ -6,11 +6,11 @@
 
 resource "aws_security_group" "endpoints" {
   vpc_id = aws_vpc.nat-test.id
-  name = "endpoints"
+  name   = "endpoints"
   ingress {
-    from_port = 443
-    to_port = 443
-    protocol = "tcp"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["10.8.0.0/16"]
   }
 }
@@ -23,23 +23,23 @@ locals {
   ]
 }
 resource "aws_vpc_endpoint" "endpoint" {
-    count = length(local.endpoints)
-    vpc_id = aws_vpc.nat-test.id
-    service_name = local.endpoints[count.index]
-    vpc_endpoint_type = "Interface"
-    private_dns_enabled = true
-    security_group_ids = [aws_security_group.endpoints.id]
-    subnet_ids = [aws_subnet.private-subnet.id]
-    tags = {
-        Name = replace(local.endpoints[count.index], "com.amazonaws.eu-central-1.", "")
-    }
+  count               = length(local.endpoints)
+  vpc_id              = aws_vpc.nat-test.id
+  service_name        = local.endpoints[count.index]
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+  security_group_ids  = [aws_security_group.endpoints.id]
+  subnet_ids          = [aws_subnet.private-subnet.id]
+  tags = {
+    Name = replace(local.endpoints[count.index], "com.amazonaws.eu-central-1.", "")
+  }
 }
 
 ### Allow new instances to register in Systems Manager
 
 resource "aws_iam_role" "ssm-instance" {
-  name = "SSM-Instance"
-    assume_role_policy = <<-EOF
+  name               = "SSM-Instance"
+  assume_role_policy = <<-EOF
     {
         "Version": "2012-10-17",
         "Statement": [ {
@@ -53,7 +53,7 @@ resource "aws_iam_role" "ssm-instance" {
 }
 
 resource "aws_iam_role_policy_attachment" "SSM-ManagedInstanceCore" {
-  role = aws_iam_role.ssm-instance.name
+  role       = aws_iam_role.ssm-instance.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
