@@ -1,6 +1,6 @@
 output "security_group_id" {
   description = "Attach this security group to private instances that should be able to use this NAT instance"
-  value       = var.security_group != "" ? var.security_group : aws_security_group.SecurityGroup[0].id
+  value       = var.security_group != "" ? var.security_group : aws_security_group.security_group[0].id
 }
 
 output "public-nat-ip" {

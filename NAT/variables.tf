@@ -3,7 +3,7 @@ variable "custom_ami" {
   type        = string
   default     = ""
   validation {
-    condition     = can(regex("ami-[a-f0-9]{17}", var.custom_ami))
+    condition     = var.custom_ami == "" || can(regex("ami-[a-f0-9]{17}", var.custom_ami))
     error_message = "You must provide a valid AMI ID"
   }
 }
@@ -26,12 +26,22 @@ variable "private_subnet" {
   }
 }
 
+variable "route_tables" {
+  description = "IDs of route tables that will be updated to route traffic through the NAT instance"
+  type        = list(string)
+  validation {
+    condition     = length(var.route_tables) > 0
+    error_message = "You must provide at least one route table ID"
+  }
+
+}
+
 variable "vpc" {
   description = "VPC ID to place the NAT instance in"
   type        = string
   default     = ""
   validation {
-    condition     = can(regex("vpc-[a-f0-9]{17}", var.vpc))
+    condition     = var.vpc == "" || can(regex("vpc-[a-f0-9]{17}", var.vpc))
     error_message = "You must provide a valid VPC ID"
   }
 }
