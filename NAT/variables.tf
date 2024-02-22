@@ -47,3 +47,9 @@ variable "name_tag" {
   type        = string
   default     = "NAT-Instance"
 }
+
+variable "iam_profile" {
+  description = "IAM instance profile to use for the NAT instance"
+  type        = string
+  default     = null
+}

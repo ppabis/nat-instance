@@ -9,6 +9,7 @@ resource "aws_instance" "nat_instance" {
   instance_type               = "t4g.nano"
   subnet_id                   = data.aws_subnet.public.id
   associate_public_ip_address = true
+  iam_instance_profile        = var.iam_profile
 
   # If AMI changes, don't redeploy the instance. However, it might be a good
   # idea to update it once in a while :)
