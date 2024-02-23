@@ -4,6 +4,6 @@ output "security_group_id" {
 }
 
 output "public-nat-ip" {
-  value       = aws_instance.nat_instance.public_ip
+  value       = var.elastic_ip ? aws_eip.public_ip[0].public_ip : aws_instance.nat_instance.public_ip
   description = "Public IP of the NAT instance if it has to be whitelisted somewhere"
 }

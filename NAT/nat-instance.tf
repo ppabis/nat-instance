@@ -46,3 +46,8 @@ resource "aws_network_interface" "private_eni" {
   source_dest_check = false # Important flag
   tags              = { StackName = "${var.name_tag}-priv" }
 }
+
+resource "aws_eip" "public_ip" {
+  count    = var.elastic_ip ? 1 : 0
+  instance = aws_instance.nat_instance.id
+}

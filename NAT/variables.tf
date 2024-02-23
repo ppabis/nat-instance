@@ -63,3 +63,14 @@ variable "iam_profile" {
   type        = string
   default     = null
 }
+
+variable "elastic_ip" {
+  # Elastic IP is useful to have any public IP if you stop and start the NAT instance
+  # When two network interfaces are attached to an instance, stop and start will
+  # not give any public IP to the instance if elastic is not used for whatever
+  # reason. Public IPs are given randomly to instances that have one ENI though.
+  # See here: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses
+  description = "(Optional) Associate an Elastic IP with the NAT instance"
+  type        = bool
+  default     = false
+}
