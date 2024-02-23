@@ -10,6 +10,7 @@ resource "aws_instance" "nat_instance" {
   subnet_id                   = data.aws_subnet.public.id
   associate_public_ip_address = true
   iam_instance_profile        = var.iam_profile
+  user_data_replace_on_change = true
 
   # If AMI changes, don't redeploy the instance. However, it might be a good
   # idea to update it once in a while :)
@@ -24,27 +25,10 @@ resource "aws_instance" "nat_instance" {
     The last part is the routing configuration so that packets are returned to
     a correct route.
   */
-  user_data = <<-EOF
-  #!/bin/bash
-  ### IP forwarding configuration
-  echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
-  sysctl --system
-  ### IPTables configuration
-  yum install iptables-services -y
-  iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-  iptables -A FORWARD -i eth0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
-  iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
-  systemctl enable iptables
-  service iptables save
-  ### Routing configuration
-  # Add private 1 to be routed via router of current private and second interface
-  %{~for cidr in setsubtract(data.aws_subnet.private[*].cidr_block, [data.aws_subnet.private[0].cidr_block])~}
-  echo "${cidr}\
-   via ${cidrhost(data.aws_subnet.private[0].cidr_block, 1)}\
-   dev eth1" >> /etc/sysconfig/network-scripts/route-eth1
-  %{~endfor~}
-  systemctl restart network
-  EOF
+  user_data = templatefile("${path.module}/user_data.sh", {
+    private_subnets : data.aws_subnet.private[*].cidr_block,
+    primary_subnet : data.aws_subnet.private[0].cidr_block
+  })
 }
 
 /**
