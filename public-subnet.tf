@@ -1,5 +1,5 @@
 resource "aws_subnet" "public-subnet" {
-  availability_zone       = "eu-central-1b"
+  availability_zone       = "eu-central-1a"
   cidr_block              = "10.8.1.0/24"
   vpc_id                  = aws_vpc.nat-test.id
   map_public_ip_on_launch = true

@@ -11,7 +11,7 @@ resource "aws_security_group" "endpoints" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["10.8.0.0/16"]
+    cidr_blocks = [aws_vpc.nat-test.cidr_block]
   }
 }
 
@@ -29,7 +29,7 @@ resource "aws_vpc_endpoint" "endpoint" {
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
   security_group_ids  = [aws_security_group.endpoints.id]
-  subnet_ids          = [aws_subnet.private-subnet.id]
+  subnet_ids          = aws_subnet.private-subnet[*].id
   tags = {
     Name = replace(local.endpoints[count.index], "com.amazonaws.eu-central-1.", "")
   }
