@@ -74,3 +74,15 @@ variable "elastic_ip" {
   type        = bool
   default     = false
 }
+
+variable "additional_sg" {
+  description = "(Optional) Additional security groups to allow to use the NAT instance"
+  type        = list(string)
+  default     = []
+}
+
+variable "additional_cidr" {
+  description = "(Optional) Additional CIDR blocks to allow to use the NAT instance"
+  type        = list(string)
+  default     = []
+}

@@ -27,5 +27,25 @@ resource "aws_security_group" "security_group" {
     self      = true
   }
 
+  dynamic "ingress" {
+    for_each = length(var.additional_sg) > 0 ? toset([""]) : toset([])
+    content {
+      from_port       = 0
+      to_port         = 0
+      protocol        = "-1"
+      security_groups = var.additional_sg
+    }
+  }
+
+  dynamic "ingress" {
+    for_each = length(var.additional_cidr) > 0 ? toset([""]) : toset([])
+    content {
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = var.additional_cidr
+    }
+  }
+
   tags = { Name = var.name_tag }
 }
