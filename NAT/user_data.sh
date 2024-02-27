@@ -16,7 +16,7 @@ while [ -z $ETH1 ] && [ $ITERATIONS -gt 0 ]; do
   ITERATIONS=$((ITERATIONS-1))
 done
 # Select public interface that is not "eth1"
-ETH0=$(ip -4 addr show | grep -P "ens[0-9]+:" | grep -v $ETH1 | grep -oP 'ens[0-9]+' | head -n1)
+ETH0=$(ip -4 addr show device-number-0 | grep -oP 'ens[0-9]+' | head -n1)
 echo "Devices: public: $ETH0 and private: $ETH1"
 
 ### IPTables configuration
