@@ -4,7 +4,6 @@ data "aws_ssm_parameter" "AL2023" {
 
 resource "aws_instance" "private-instance" {
   count                = 2
-  tags                 = { Name = "Private-Instance-${count.index}" }
   ami                  = data.aws_ssm_parameter.AL2023.value
   subnet_id            = aws_subnet.private-subnet[count.index].id
   instance_type        = "t4g.nano"
@@ -13,6 +12,10 @@ resource "aws_instance" "private-instance" {
     aws_security_group.private.id,
     module.nat.security_group_id
   ]
+  tags = {
+    Name    = "Private-Instance-${count.index}"
+    Project = "NAT-Test"
+  }
 }
 
 resource "aws_security_group" "private" {
@@ -24,4 +27,12 @@ resource "aws_security_group" "private" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+output "private-instance-ids" {
+  value = aws_instance.private-instance[*].id
+}
+
+module "Test-SSM" {
+  source = "./Test-SSM"
 }

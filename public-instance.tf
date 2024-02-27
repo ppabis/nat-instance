@@ -7,3 +7,7 @@ module "nat" {
   iam_profile    = aws_iam_instance_profile.ssm-profile.name
   elastic_ip     = true
 }
+
+output "public-ip" {
+  value = module.nat.public-nat-ip
+}
