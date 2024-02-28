@@ -14,3 +14,9 @@ variable "vpc" {
   type        = string
   description = "VPC ID to place the instances in"
 }
+
+variable "SSM-Role" {
+  type        = string
+  description = "IAM instance profile to use for the instances"
+  default     = null
+}

@@ -1,6 +1,7 @@
 ### Allow new instances to register in Systems Manager
 
 resource "aws_iam_role" "ssm-instance" {
+  count              = var.SSM-Role == null ? 1 : 0
   name               = "SSM-Instance"
   assume_role_policy = <<-EOF
     {
@@ -16,11 +17,13 @@ resource "aws_iam_role" "ssm-instance" {
 }
 
 resource "aws_iam_role_policy_attachment" "SSM-ManagedInstanceCore" {
-  role       = aws_iam_role.ssm-instance.name
+  count      = var.SSM-Role == null ? 1 : 0
+  role       = aws_iam_role.ssm-instance[0].name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_instance_profile" "ssm-profile" {
-  name = "SSM-Instance-Profile"
-  role = aws_iam_role.ssm-instance.name
+  count = var.SSM-Role == null ? 1 : 0
+  name  = "SSM-Instance-Profile"
+  role  = aws_iam_role.ssm-instance[0].name
 }
