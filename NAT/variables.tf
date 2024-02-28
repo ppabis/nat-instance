@@ -64,6 +64,12 @@ variable "iam_profile" {
   default     = null
 }
 
+variable "create_ssm_role" {
+  description = "Create an IAM role for SSM if it does not exist or is not specified"
+  type        = bool
+  default     = false
+}
+
 variable "elastic_ip" {
   # Elastic IP is useful to have any public IP if you stop and start the NAT instance
   # When two network interfaces are attached to an instance, stop and start will

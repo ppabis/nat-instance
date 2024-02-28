@@ -9,7 +9,7 @@ resource "aws_instance" "nat_instance" {
   instance_type               = "t4g.nano"
   subnet_id                   = data.aws_subnet.public.id
   associate_public_ip_address = true
-  iam_instance_profile        = var.iam_profile
+  iam_instance_profile        = var.create_ssm_role ? aws_iam_instance_profile.ssm-role[0].name : null
   user_data_replace_on_change = true
 
   # If AMI changes, don't redeploy the instance. However, it might be a good
