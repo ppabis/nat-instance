@@ -35,5 +35,6 @@ echo "[Route]" >> /etc/systemd/network/70-$ETH1.network.d/routes.conf
 echo "Destination=${cidr}" >> /etc/systemd/network/70-$ETH1.network.d/routes.conf
 echo "Gateway=${cidrhost(primary_subnet, 1)}" >> /etc/systemd/network/70-$ETH1.network.d/routes.conf
 echo "GatewayOnlink=yes" >> /etc/systemd/network/70-$ETH1.network.d/routes.conf
+echo "" >> /etc/systemd/network/70-$ETH1.network.d/routes.conf
 %{~endfor}
 networkctl reload
