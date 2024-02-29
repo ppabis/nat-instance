@@ -17,9 +17,9 @@ resource "aws_security_group" "endpoints" {
 
 locals {
   endpoints = [
-    "com.amazonaws.eu-central-1.ec2messages",
-    "com.amazonaws.eu-central-1.ssm",
-    "com.amazonaws.eu-central-1.ssmmessages"
+    "com.amazonaws.${var.region}.ec2messages",
+    "com.amazonaws.${var.region}.ssm",
+    "com.amazonaws.${var.region}.ssmmessages"
   ]
 }
 resource "aws_vpc_endpoint" "endpoint" {
@@ -31,7 +31,7 @@ resource "aws_vpc_endpoint" "endpoint" {
   security_group_ids  = [aws_security_group.endpoints.id]
   subnet_ids          = [for k, v in aws_subnet.private : v.id]
   tags = {
-    Name = replace(local.endpoints[count.index], "com.amazonaws.eu-central-1.", "")
+    Name = replace(local.endpoints[count.index], "com.amazonaws.${var.region}.", "")
   }
 }
 
