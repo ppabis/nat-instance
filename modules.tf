@@ -23,6 +23,7 @@ module "test-instances" {
     module.nat.security_group_id,              // Instance 2 will use the same SG as the NAT
     null                                       // Instance 3 will be allowed via CIDR
   ]
+  SSM-Role = var.testing_ssm_role
 }
 
 module "test-ssm" {
