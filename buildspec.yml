@@ -1,0 +1,26 @@
+---
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      golang: 1.20
+  pre_build:
+    # Install Terraform
+    commands:
+      - yum install -y yum-utils
+      - yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+      - yum -y install terraform
+      - go version
+      - terraform version
+  build:
+    commands:
+      - go mod download
+      - go mod tidy
+      - cd test
+      - go test -v -timeout 30m
+      - cd ..
+  post_build:
+    commands:
+      - rm -f terraform.tfstate
+      - rm -f terraform.tfstate.*
