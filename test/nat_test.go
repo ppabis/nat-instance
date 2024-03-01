@@ -1,9 +1,12 @@
 package test
 
 import (
-	"github.com/gruntwork-io/terratest/modules/terraform"
 	"os"
 	"testing"
+	"time"
+
+	"github.com/gruntwork-io/terratest/modules/aws"
+	"github.com/gruntwork-io/terratest/modules/terraform"
 )
 
 func TestNatInstance(t *testing.T) {
@@ -35,4 +38,18 @@ func TestNatInstance(t *testing.T) {
 
 	defer terraform.Destroy(t, terraformOptions)
 	terraform.InitAndApply(t, terraformOptions)
+
+	// Wait until all instances are registered in the inventory
+	instanceIdsString := terraform.OutputList(t, terraformOptions, "test-instances-ids")
+	for _, instanceId := range instanceIdsString {
+		aws.WaitForSsmInstance(t, region, instanceId, 2*time.Minute)
+	}
+
+	ssmClient := aws.NewSsmClient(t, region)
+	publicIp := terraform.Output(t, terraformOptions, "public-ip")
+	err := runTestDocument(t, ssmClient, "TestInternetConnectivity", publicIp)
+	if err != nil {
+		t.Log(err)
+		t.Fail()
+	}
 }
