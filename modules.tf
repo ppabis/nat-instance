@@ -33,3 +33,7 @@ module "test-ssm" {
 output "public-ip" {
   value = module.nat.public-nat-ip
 }
+
+output "test-instances-ids" {
+  value = module.test-instances.instance_ids
+}
